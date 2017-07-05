@@ -44,6 +44,8 @@ api/examples/__init__.py
 api/examples/setup.py
 api/src/gfapi.map
 cli/src/gluster
+rpc/xdr/gen
+glusterfsd/src/gf_attach
 contrib/argp-standalone/libargp.a
 contrib/fuse-util/fusermount-glusterfs
 contrib/uuid/uuid_types.h
