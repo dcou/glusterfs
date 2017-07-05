@@ -514,7 +514,6 @@ pool_destructor (void *arg)
 static __attribute__((constructor)) void
 mem_pools_preinit (void)
 {
-#if !defined(GF_DISABLE_MEMPOOL)
         unsigned int    i;
 
         /* Use a pthread_key destructor to clean up when a thread exits. */
@@ -532,7 +531,6 @@ mem_pools_preinit (void)
 
         pool_list_size = sizeof (per_thread_pool_list_t)
                        + sizeof (per_thread_pool_t) * (NPOOLS - 1);
-#endif
 }
 
 void
@@ -660,10 +658,6 @@ mem_get_from_pool (per_thread_pool_t *pt_pool)
 void *
 mem_get (struct mem_pool *mem_pool)
 {
-#if defined(GF_DISABLE_MEMPOOL)
-        return GF_CALLOC (1, mem_pool->real_sizeof_type,
-                          gf_common_mt_mem_pool);
-#else
         per_thread_pool_list_t  *pool_list;
         per_thread_pool_t       *pt_pool;
         pooled_obj_hdr_t        *retval;
@@ -674,6 +668,10 @@ mem_get (struct mem_pool *mem_pool)
                 return NULL;
         }
 
+#if defined(GF_DISABLE_MEMPOOL)
+        return GF_CALLOC (1, (1 << mem_pool->power_of_two),
+                          gf_common_mt_mem_pool);
+#else
         pool_list = mem_get_pool_list ();
         if (!pool_list || pool_list->poison) {
                 return NULL;
@@ -694,8 +692,8 @@ mem_get (struct mem_pool *mem_pool)
         retval->power_of_two = mem_pool->power_of_two;
 
         return retval + 1;
-}
 #endif /* GF_DISABLE_MEMPOOL */
+}
 
 
 void
