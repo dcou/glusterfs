@@ -111,12 +111,12 @@ cb_buffer_dump (buffer_t *buffer, void *data,
         int size_buff = 0;
         int i = 0;
 
-        ul = buffer->used_len;
-        w_ind = buffer->w_index;
-        size_buff = buffer->size_buffer;
-
         pthread_mutex_lock (&buffer->lock);
         {
+                ul = buffer->used_len;
+                w_ind = buffer->w_index;
+                size_buff = buffer->size_buffer;
+
                 if (buffer->use_once == _gf_false) {
                         index = (size_buff + (w_ind - ul))%size_buff;
                         for (entries = 0; entries < buffer->used_len;
