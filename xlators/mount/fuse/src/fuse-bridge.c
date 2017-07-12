@@ -748,6 +748,7 @@ fuse_attr_cbk (call_frame_t *frame, void *cookie, xlator_t *this,
         fuse_in_header_t *finh;
         fuse_private_t   *priv = NULL;
         struct fuse_attr_out fao;
+        memset(&fao, 0, sizeof(fao));
 
         priv  = this->private;
         state = frame->root->state;
